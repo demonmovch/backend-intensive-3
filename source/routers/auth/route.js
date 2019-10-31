@@ -3,21 +3,23 @@ import dg from 'debug';
 const debug = dg('router:auth');
 
 export const login = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        res.sendStatus(204);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  req.session.user = { email: 'test@test.ninja' };
+
+  try {
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 export const logout = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        res.sendStatus(204);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
