@@ -1,37 +1,47 @@
-import dg from 'debug';
+import dg from "debug";
 
-const debug = dg('router:users:hash');
+import { users } from "../../../odm";
+
+const debug = dg("router:users:hash");
 
 export const getByHash = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        const data = {};
+  try {
+    const data = req.params.userHash;
 
-        res.status(200).json({ data });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
-export const updateByHash = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+export const updateByHash = async (req, res) => {
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        const data = {};
+  try {
+    const { userHash } = req.params;
 
-        res.status(200).json({ data });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    const data = await users.findOneAndUpdate({ hash: userHash }, req.body, {
+      new: true
+    });
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
-export const removeByHash = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+export const removeByHash = async (req, res) => {
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        res.sendStatus(204);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+    const { userHash } = req.params;
+
+    await users.findOneAndDelete({ hash: userHash });
+
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };

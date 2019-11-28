@@ -1,37 +1,51 @@
-import dg from 'debug';
+import dg from "debug";
 
-const debug = dg('router:lessons:hash');
+const debug = dg("router:lessons:hash");
+
+import { lessons } from "../../../odm";
 
 export const getByHash = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        const data = {};
+  try {
+    const data = req.params.lessonHash;
 
-        res.status(200).json({ data });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
-export const updateByHash = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+export const updateByHash = async (req, res) => {
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        const data = {};
+  try {
+    const { lessonHash } = req.params;
 
-        res.status(200).json({ data });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    const data = await lessons.findOneAndUpdate(
+      { hash: lessonHash },
+      req.body,
+      {
+        new: true
+      }
+    );
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
-export const removeByHash = (req, res) => {
-    debug(`${req.method} - ${req.originalUrl}`);
+export const removeByHash = async (req, res) => {
+  debug(`${req.method} - ${req.originalUrl}`);
 
-    try {
-        res.sendStatus(204);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+    const { lessonHash } = req.params;
+
+    await lessons.findOneAndDelete({ hash: lessonHash });
+
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
